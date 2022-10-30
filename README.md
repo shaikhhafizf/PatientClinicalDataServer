@@ -1,2 +1,0 @@
-# PatientClinicalData
- Enterprice Project
