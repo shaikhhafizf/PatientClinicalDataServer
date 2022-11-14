@@ -17,18 +17,18 @@ var plugin = function (option) {
       args.phoneNumber &&
       args.Address
     ) {
-      var patients = this.make("patients");
-      patients.firstName = args.firstName;
-      patients.lastName = args.lastName;
-      patients.age = args.age;
-      patients.gender = args.gender;
-      patients.dob = args.dob;
-      patients.email = args.email;
-      patients.phoneNumber = args.phoneNumber;
-      patients.Address = args.Address;
+      var patient = this.make("patients");
+      patient.firstName = args.firstName;
+      patient.lastName = args.lastName;
+      patient.age = args.age;
+      patient.gender = args.gender;
+      patient.dob = args.dob;
+      patient.email = args.email;
+      patient.phoneNumber = args.phoneNumber;
+      patient.Address = args.Address;
 
-      patients.save$(function (err, product) {
-        done(err, patients.data$(false));
+      patient.save$(function (err, patient) {
+        done(err, patient.data$(false));
       });
     } else {
       done(null, { error: "Data missing" });
@@ -45,20 +45,9 @@ var plugin = function (option) {
     console.log("> GET req: Get Patient request received");
     var patients = this.make("patients");
     console.log(args.patientId);
-    patients.list$({}, (err, res) => {
-      var found = false;
-      res.forEach((element) => {
-        console.log(element.id);
-        if (element.id == args.patientId) {
-          found = true;
-          found = element;
-        }
-      });
-      if (found) {
-        done(null, { patient: found });
-      } else {
-        done(null, { er: "not Found" });
-      }
+    patients.load$(args.patientID, function (err, patient) {
+      console.log(patient);
+      done(err, patient);
     });
   });
   //---------------------------------------adding pattern for DELETE request(delete patient)
@@ -67,6 +56,42 @@ var plugin = function (option) {
     var patients = this.make("patients");
     patients.remove$(args.patientId, function (err) {
       done(err, null);
+    });
+  });
+  //---------------------------------------add pattern for PATCH request(update Patient)
+  seneca.add("role:patch,cmd:patient", (args, done) => {
+    console.log("> PATCH req: Updating Patient request received");
+    var patients = this.make("patients");
+    var patientObj = {};
+    console.log(args.patientID);
+    if (args.firstName) {
+      patientObj.firstName = args.firstName;
+    }
+    if (args.lastName) {
+      patientObj.lastName = args.lastName;
+    }
+    if (args.age) {
+      patientObj.age = args.age;
+    }
+    if (args.gender) {
+      patientObj.gender = args.gender;
+    }
+    if (args.dob) {
+      patientObj.dob = args.dob;
+    }
+    if (args.email) {
+      patientObj.email = args.email;
+    }
+    if (args.phoneNumber) {
+      patientObj.phoneNumber = args.phoneNumber;
+    }
+    if (args.Address) {
+      patientObj.Address = args.Address;
+    }
+
+    patients.load$(args.patientID, function (err, patient) {
+      console.log(patientObj);
+      done(err, patient.data$(patientObj));
     });
   });
 
@@ -93,28 +118,6 @@ var plugin = function (option) {
       },
     },
   });
-  //--------------------------------------act for Post request(adding Patient Record)
-  seneca.act("role:web", {
-    use: {
-      prefix: "",
-      pin: { role: "post", cmd: "*" },
-      map: {
-        patient: { POST: true },
-      },
-    },
-  });
-
-  //--------------------------------------act for GET request(getting All patient record)
-  seneca.act("role:web", {
-    use: {
-      prefix: "",
-      pin: { role: "get", cmd: "*" },
-      map: {
-        patients: { GET: true },
-      },
-    },
-  });
-
   //--------------------------------------act for GET request(View patient with id)
   seneca.act("role:web", {
     use: {
@@ -133,6 +136,37 @@ var plugin = function (option) {
       pin: { role: "delete", cmd: "*" },
       map: {
         patient: { DELETE: true },
+      },
+    },
+  });
+  //--------------------------------------act for PATCH request(updating patient)
+  seneca.act("role:web", {
+    use: {
+      prefix: "",
+      pin: { role: "patch", cmd: "*" },
+      map: {
+        patient: { PATCH: true },
+      },
+    },
+  });
+  //--------------------------------------act for Post request(adding Patient Record)
+  seneca.act("role:web", {
+    use: {
+      prefix: "",
+      pin: { role: "post", cmd: "*" },
+      map: {
+        patientRecord: { POST: true },
+      },
+    },
+  });
+
+  //--------------------------------------act for GET request(getting All patient record)
+  seneca.act("role:web", {
+    use: {
+      prefix: "",
+      pin: { role: "get", cmd: "*" },
+      map: {
+        patients: { GET: true },
       },
     },
   });

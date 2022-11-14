@@ -34,4 +34,24 @@ seneca.ready(() => {
   console.log(
     "http://127.0.0.1:3009/patient?patientId=<patientId> [GET request to Patient by id]"
   );
+  console.log("-------------Requests(M2)----------------------");
+  console.log(
+    "http://127.0.0.1:3009/patient?patientId=<patientId> [Patch request to update Patient data by id]"
+  );
+
+  console.log(
+    "http://127.0.0.1:3009/patientRecord?patientId=<patientId> [POST request to add patientrecord]"
+  );
+  console.log(
+    "http://127.0.0.1:3009/patientRecords?patientId=<patientId> [GET request to fetch all records of patient]"
+  );
+  console.log(
+    "http://127.0.0.1:3009/patientRecord?recordId=<recordId> [GET request to view any record of patient]"
+  );
+  console.log(
+    "http://127.0.0.1:3009/patientRecord?recordId=<recordId> [Patch request to update any record of patient]"
+  );
+  console.log(
+    "http://127.0.0.1:3009/patientRecord?recordId=<recordId> [Delete request to delete any record of patient]"
+  );
 });
