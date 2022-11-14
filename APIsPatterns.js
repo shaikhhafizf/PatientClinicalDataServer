@@ -44,7 +44,7 @@ var plugin = function (option) {
     console.log("> GET req: Get Patient request received");
     var patients = this.make("patients");
     console.log(args.patientId);
-    patients.load$(args.patientID, function (err, patient) {
+    patients.load$(args.patientId, function (err, patient) {
       console.log(patient);
       done(err, patient);
     });
@@ -62,7 +62,7 @@ var plugin = function (option) {
     console.log("> PATCH req: Updating Patient request received");
     var patients = this.make("patients");
     var patientObj = {};
-    console.log(args.patientID);
+    console.log(args.patientId);
     if (args.firstName) {
       patientObj.firstName = args.firstName;
     }
@@ -88,11 +88,38 @@ var plugin = function (option) {
       patientObj.Address = args.Address;
     }
 
-    patients.load$(args.patientID, function (err, patient) {
+    patients.load$(args.patientId, function (err, patient) {
       console.log(patientObj);
       done(err, patient.data$(patientObj));
     });
   });
-  //------------------------------------Adding parttern
+  //------------------------------------Adding parttern for POST Request[Add Patient Record]
+  seneca.add("role:post,cmd:patientRecord", (args, done) => {
+    console.log("POST Request: Add patient record request");
+    if (args.type && args.value && args.dateTime && args.patientId) {
+      var patients = this.make("patients");
+      patients.load$(args.patientId, function (err, patient) {
+        if (err) {
+          done(null, { error: "Patient not found" });
+        } else {
+          var record = this.make("patientRecords");
+          record.patientId = patient.id;
+          record.type = args.type;
+          record.value = args.value;
+          record.dateTime = args.dateTime;
+          record.save$((err, record) => {
+            done(err, record.data$(false));
+          });
+        }
+      });
+    } else {
+      done(null, { error: "Data missing" });
+    }
+  });
+  //------------------------------------Adding pattern for GET request[Get all patient Records]
+  seneca.add("role:get,cmd:patientRecords", (args, done) => {
+    var records = this.make("patientRecords");
+    records.list$({ patientId: args.patientId }, done);
+  });
 };
 module.exports = plugin;

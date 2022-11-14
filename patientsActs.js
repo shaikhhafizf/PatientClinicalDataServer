@@ -72,7 +72,7 @@ var plugin = function (option) {
       prefix: "",
       pin: { role: "get", cmd: "*" },
       map: {
-        patients: { GET: true },
+        patientRecords: { GET: true },
       },
     },
   });
