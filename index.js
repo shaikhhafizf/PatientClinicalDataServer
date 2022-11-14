@@ -7,6 +7,7 @@ seneca.use("mongo-store", {
 seneca.use("entity");
 
 seneca.ready(() => {
+  seneca.use("APIsPatterns");
   seneca.use("patientsDataManager");
   //---------------------------------configuration of express framework
   var express = require("express");
