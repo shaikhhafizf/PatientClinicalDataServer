@@ -8,7 +8,7 @@ seneca.use("entity");
 
 seneca.ready(() => {
   seneca.use("APIsPatterns");
-  seneca.use("patientsDataManager");
+  seneca.use("patientsActs");
   //---------------------------------configuration of express framework
   var express = require("express");
   var app = express();
