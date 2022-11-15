@@ -76,5 +76,36 @@ var plugin = function (option) {
       },
     },
   });
+  //--------------------------------------act for GET request(getting patient record with Id)
+  seneca.act("role:web", {
+    use: {
+      prefix: "",
+      pin: { role: "get", cmd: "*" },
+      map: {
+        patientRecord: { GET: true },
+      },
+    },
+  });
+
+  //--------------------------------------act for PATCH request(updating patient record)
+  seneca.act("role:web", {
+    use: {
+      prefix: "",
+      pin: { role: "patch", cmd: "*" },
+      map: {
+        patientRecord: { PATCH: true },
+      },
+    },
+  });
+  //--------------------------------------act for PATCH request(updating patient record)
+  seneca.act("role:web", {
+    use: {
+      prefix: "",
+      pin: { role: "delete", cmd: "*" },
+      map: {
+        patientRecord: { DELETE: true },
+      },
+    },
+  });
 };
 module.exports = plugin;

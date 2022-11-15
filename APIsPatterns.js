@@ -89,7 +89,6 @@ var plugin = function (option) {
     }
 
     patients.load$(args.patientId, function (err, patient) {
-      console.log(patientObj);
       done(err, patient.data$(patientObj));
     });
   });
@@ -120,6 +119,38 @@ var plugin = function (option) {
   seneca.add("role:get,cmd:patientRecords", (args, done) => {
     var records = this.make("patientRecords");
     records.list$({ patientId: args.patientId }, done);
+  });
+  //------------------------------------Adding pattern for GET request[Get patient Record with Id]
+  seneca.add("role:get,cmd:patientRecord", (args, done) => {
+    var records = this.make("patientRecords");
+    records.load$(args.recordId, (err, record) => {
+      done(err, record.data$(false));
+    });
+  });
+  //------------------------------------Adding pattern for PATCH request[Updating patient Record]
+  seneca.add("role:patch,cmd:patientRecord", (args, done) => {
+    var records = this.make("patientRecords");
+    var patientRecordObj = {};
+    if (args.type) {
+      patientRecordObj.type = args.type;
+    }
+    if (args.dateTime) {
+      patientRecordObj.dateTime = args.dateTime;
+    }
+    if (args.value) {
+      patientRecordObj.value = args.value;
+    }
+    records.load$(args.recordId, (err, record) => {
+      done(err, record.data$(patientRecordObj));
+    });
+  });
+  //------------------------------------Adding pattern for PATCH request[Updating patient Record]
+  seneca.add("role:delete,cmd:patientRecord", (args, done) => {
+    console.log("-->delete, item_id:" + args.recordId);
+    var records = this.make("patientRecords");
+    records.remove$(args.recordId, function (err) {
+      done(err, null);
+    });
   });
 };
 module.exports = plugin;
