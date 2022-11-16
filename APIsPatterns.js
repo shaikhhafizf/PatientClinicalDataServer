@@ -91,7 +91,10 @@ var plugin = function (option) {
     }
 
     patients.load$(args.patientId, function (err, patient) {
-      done(err, patient.data$(patientObj));
+      patient.data$(patientObj);
+      patient.save$((err, patient) => {
+        done(err, patient.data$(false));
+      });
     });
   });
   //------------------------------------Adding parttern for POST Request[Add Patient Record]
@@ -149,7 +152,10 @@ var plugin = function (option) {
       if (record === null) {
         done(err, { error: "record Id not found" });
       }
-      done(err, record.data$(patientRecordObj));
+      record.data$(patientRecordObj);
+      record.save$((err, record) => {
+        done(err, record.data$(false));
+      });
     });
   });
   //------------------------------------Adding pattern for DELETE request[deleting patient Record]
