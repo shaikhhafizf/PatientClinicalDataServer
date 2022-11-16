@@ -3,7 +3,7 @@ var plugin = function (option) {
   //---------------------------------implementing API or adding pattern----------------------------
 
   //---------------------------------------adding pattern for Post request(adding Patient)
-  seneca.add("role:post,cmd:patient", (args, done) => {
+  seneca.add("role:post,cmd:patients", (args, done) => {
     console.log("> POST req: Add Patient request received");
     console.log("-->add, item_name:" + args.firstName);
     if (
@@ -40,17 +40,19 @@ var plugin = function (option) {
     patients.list$({}, done);
   });
   //---------------------------------------adding pattern for GET request(View patient with id)
-  seneca.add("role:get,cmd:patient", (args, done) => {
+  seneca.add("role:getById,cmd:patients", (args, done) => {
     console.log("> GET req: Get Patient request received");
     var patients = this.make("patients");
     console.log(args.patientId);
     patients.load$(args.patientId, function (err, patient) {
-      console.log(patient);
+      if (patient == null) {
+        done(err, { error: "Patient not Found" });
+      }
       done(err, patient);
     });
   });
   //---------------------------------------adding pattern for DELETE request(delete patient)
-  seneca.add("role:delete,cmd:patient", (args, done) => {
+  seneca.add("role:delete,cmd:patients", (args, done) => {
     console.log("-->delete, item_id:" + args.item_id);
     var patients = this.make("patients");
     patients.remove$(args.patientId, function (err) {
@@ -58,7 +60,7 @@ var plugin = function (option) {
     });
   });
   //---------------------------------------add pattern for PATCH request(update Patient)
-  seneca.add("role:patch,cmd:patient", (args, done) => {
+  seneca.add("role:patch,cmd:patients", (args, done) => {
     console.log("> PATCH req: Updating Patient request received");
     var patients = this.make("patients");
     var patientObj = {};
@@ -93,13 +95,13 @@ var plugin = function (option) {
     });
   });
   //------------------------------------Adding parttern for POST Request[Add Patient Record]
-  seneca.add("role:post,cmd:patientRecord", (args, done) => {
+  seneca.add("role:post,cmd:patientRecords", (args, done) => {
     console.log("POST Request: Add patient record request");
     if (args.type && args.value && args.dateTime && args.patientId) {
       var patients = this.make("patients");
       patients.load$(args.patientId, function (err, patient) {
-        if (err) {
-          done(null, { error: "Patient not found" });
+        if (patient == null) {
+          done(err, { error: "Patient not Found" });
         } else {
           var record = this.make("patientRecords");
           record.patientId = patient.id;
@@ -121,14 +123,17 @@ var plugin = function (option) {
     records.list$({ patientId: args.patientId }, done);
   });
   //------------------------------------Adding pattern for GET request[Get patient Record with Id]
-  seneca.add("role:get,cmd:patientRecord", (args, done) => {
+  seneca.add("role:getById,cmd:patientRecords", (args, done) => {
     var records = this.make("patientRecords");
     records.load$(args.recordId, (err, record) => {
+      if (record == null) {
+        done(err, { error: "Record not found with this id" });
+      }
       done(err, record.data$(false));
     });
   });
   //------------------------------------Adding pattern for PATCH request[Updating patient Record]
-  seneca.add("role:patch,cmd:patientRecord", (args, done) => {
+  seneca.add("role:patch,cmd:patientRecords", (args, done) => {
     var records = this.make("patientRecords");
     var patientRecordObj = {};
     if (args.type) {
@@ -141,11 +146,14 @@ var plugin = function (option) {
       patientRecordObj.value = args.value;
     }
     records.load$(args.recordId, (err, record) => {
+      if (record === null) {
+        done(err, { error: "record Id not found" });
+      }
       done(err, record.data$(patientRecordObj));
     });
   });
-  //------------------------------------Adding pattern for PATCH request[Updating patient Record]
-  seneca.add("role:delete,cmd:patientRecord", (args, done) => {
+  //------------------------------------Adding pattern for DELETE request[deleting patient Record]
+  seneca.add("role:delete,cmd:patientRecords", (args, done) => {
     console.log("-->delete, item_id:" + args.recordId);
     var records = this.make("patientRecords");
     records.remove$(args.recordId, function (err) {

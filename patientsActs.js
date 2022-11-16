@@ -9,7 +9,7 @@ var plugin = function (option) {
       prefix: "",
       pin: { role: "post", cmd: "*" },
       map: {
-        patient: { POST: true },
+        patients: { POST: true },
       },
     },
   });
@@ -28,9 +28,9 @@ var plugin = function (option) {
   seneca.act("role:web", {
     use: {
       prefix: "",
-      pin: { role: "get", cmd: "*" },
+      pin: { role: "getById", cmd: "*" },
       map: {
-        patient: { GET: true },
+        patients: { GET: true, suffix: "/:patientId" },
       },
     },
   });
@@ -41,7 +41,7 @@ var plugin = function (option) {
       prefix: "",
       pin: { role: "delete", cmd: "*" },
       map: {
-        patient: { DELETE: true },
+        patients: { DELETE: true, suffix: "/:patientId" },
       },
     },
   });
@@ -51,7 +51,7 @@ var plugin = function (option) {
       prefix: "",
       pin: { role: "patch", cmd: "*" },
       map: {
-        patient: { PATCH: true },
+        patients: { PATCH: true, suffix: "/:patientId" },
       },
     },
   });
@@ -61,12 +61,12 @@ var plugin = function (option) {
       prefix: "",
       pin: { role: "post", cmd: "*" },
       map: {
-        patientRecord: { POST: true },
+        patientRecords: { POST: true },
       },
     },
   });
 
-  //--------------------------------------act for GET request(getting All patient record)
+  //--------------------------------------act for GET request(getting patient's All records)
   seneca.act("role:web", {
     use: {
       prefix: "",
@@ -80,9 +80,9 @@ var plugin = function (option) {
   seneca.act("role:web", {
     use: {
       prefix: "",
-      pin: { role: "get", cmd: "*" },
+      pin: { role: "getById", cmd: "*" },
       map: {
-        patientRecord: { GET: true },
+        patientRecords: { GET: true, suffix: "/:recordId" },
       },
     },
   });
@@ -93,17 +93,17 @@ var plugin = function (option) {
       prefix: "",
       pin: { role: "patch", cmd: "*" },
       map: {
-        patientRecord: { PATCH: true },
+        patientRecords: { PATCH: true, suffix: "/:recordId" },
       },
     },
   });
-  //--------------------------------------act for PATCH request(updating patient record)
+  //--------------------------------------act for DELETE request(deleting patient record)
   seneca.act("role:web", {
     use: {
       prefix: "",
       pin: { role: "delete", cmd: "*" },
       map: {
-        patientRecord: { DELETE: true },
+        patientRecords: { DELETE: true, suffix: "/:recordId" },
       },
     },
   });
