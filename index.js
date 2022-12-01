@@ -1,9 +1,11 @@
 var seneca = require("seneca")();
-seneca.use("mongo-store", {
-  name: "clinicData",
-  host: "127.0.0.1",
-  port: "27017",
-});
+// seneca.use("mongo-store", {
+//   uri: "mongodb+srv://enterprise:test%4012345@cluster0.pawyzsi.mongodb.net/?retryWrites=true&w=majority",
+//   options: {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+//   },
+// });
 seneca.use("entity");
 
 seneca.ready(() => {
