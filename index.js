@@ -1,11 +1,11 @@
 var seneca = require("seneca")();
-// seneca.use("mongo-store", {
-//   uri: "mongodb+srv://enterprise:test%4012345@cluster0.pawyzsi.mongodb.net/Enterprice",
-//   options: {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true,
-//   },
-// });
+seneca.use("mongo-store", {
+  uri: "mongodb+srv://enterprise:test%4012345@cluster0.pawyzsi.mongodb.net/Enterprice",
+  options: {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  },
+});
 seneca.use("entity");
 
 seneca.ready(() => {
